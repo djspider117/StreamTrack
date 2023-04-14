@@ -1,0 +1,89 @@
+﻿@page "/"
+@using System.Xml;
+@using System.Security;
+@inject IJSRuntime JS
+
+<div id="nowPlaying">NOW PLAYING</div>
+<div id="artist"></div>
+<div id="track"></div>
+<div id="remix"></div>
+
+@code {
+    private const string VirtualDJDocumentsPath = @"C:\Users\ionut\Documents\VirtualDJ";
+    private string _currentWatchFolder;
+    private FileSystemWatcher _watcher;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        WatchFolder();
+
+        var directory = new DirectoryInfo(System.IO.Path.Combine(_currentWatchFolder, "History"));
+        var latestPlaylist = (from f in directory.GetFiles()
+                              orderby f.LastWriteTime descending
+                              select f).First();
+
+        await UpdateCurrentlyPlayingTrack(latestPlaylist.FullName);
+    }
+
+    private void WatchFolder()
+    {
+        if (_currentWatchFolder == VirtualDJDocumentsPath)
+            return;
+
+        _currentWatchFolder = VirtualDJDocumentsPath;
+
+        if (_watcher != null)
+        {
+            _watcher.Changed -= Watcher_Changed;
+            _watcher.Dispose();
+        }
+
+        _watcher = new FileSystemWatcher(_currentWatchFolder)
+            {
+                Filter = "*.m3u",
+                IncludeSubdirectories = true,
+                EnableRaisingEvents = true,
+                NotifyFilter = NotifyFilters.Attributes
+                                       | NotifyFilters.CreationTime
+                                       | NotifyFilters.DirectoryName
+                                       | NotifyFilters.FileName
+                                       | NotifyFilters.LastAccess
+                                       | NotifyFilters.LastWrite
+                                       | NotifyFilters.Security
+                                       | NotifyFilters.Size
+            };
+
+        _watcher.Changed += Watcher_Changed;
+    }
+
+    private async void Watcher_Changed(object sender, FileSystemEventArgs e)
+    {
+        await UpdateCurrentlyPlayingTrack(e.FullPath);
+    }
+
+    private async Task UpdateCurrentlyPlayingTrack(string path)
+    {
+        var playlistLines = await File.ReadAllLinesAsync(path);
+        var ext = playlistLines[^2]
+            .Replace("#EXTVDJ:", string.Empty)
+            .Insert(0, "<doc>");
+
+        ext += "</doc>";
+        ext = ext.Replace("&", "&amp;");
+
+        var doc = new XmlDocument();
+        doc.LoadXml(ext);
+
+        var curArtist = doc["doc"]["artist"]?.InnerText ?? string.Empty;
+        var curTrack = doc["doc"]["title"]?.InnerText ?? string.Empty;
+        var curRemix = doc["doc"]["remix"]?.InnerText ?? string.Empty;
+        try
+        {
+            await JS.InvokeAsync<PlaylistItem>("SignalUpdate", new PlaylistItem(curArtist, curTrack, curRemix));
+        }
+        catch (JSDisconnectedException)
+        {
+            //ignore
+        }
+    }
+}

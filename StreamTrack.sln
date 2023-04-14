@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33502.453
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StreamTrack", "StreamTrack\StreamTrack.csproj", "{8E75D67B-D95B-4080-B27A-A386DE25DECF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StreamBlaze", "StreamBlaze\StreamBlaze.csproj", "{58D42FC7-B8D1-4881-A44A-198A0B8FC60E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8E75D67B-D95B-4080-B27A-A386DE25DECF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8E75D67B-D95B-4080-B27A-A386DE25DECF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8E75D67B-D95B-4080-B27A-A386DE25DECF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8E75D67B-D95B-4080-B27A-A386DE25DECF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{58D42FC7-B8D1-4881-A44A-198A0B8FC60E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{58D42FC7-B8D1-4881-A44A-198A0B8FC60E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{58D42FC7-B8D1-4881-A44A-198A0B8FC60E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{58D42FC7-B8D1-4881-A44A-198A0B8FC60E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {378A17C3-2958-4728-8B09-E469E8D32E8D}
+	EndGlobalSection
+EndGlobal
